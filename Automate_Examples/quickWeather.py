@@ -1,7 +1,9 @@
 #! python3
 # quickWeather.py - Prints the current weather for a location from the command line.
 
-import json, requests, sys
+import json
+import requests
+import sys
 
 # Compute location from command line arguments.
 if len(sys.argv) < 2:
@@ -14,7 +16,7 @@ url ='http://api.openweathermap.org/data/2.5/forecast/daily?q=%s&cnt=3' % (locat
 response = requests.get(url)
 response.raise_for_status()
 
-# Load JSON data into a Python variable.
+# TODO Load JSON data into a Python variable.
 weatherData = json.loads(response.text)
 
 # Print weather descriptions.
