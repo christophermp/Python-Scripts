@@ -15,4 +15,11 @@ while finished == False:
     print(right)
     if list(master) == right:
         print("You win!")
-        finished = True
+        again = input("Again? y/n ")
+        if again == "y":
+            master = input("Write a word: ")
+            word = list(master)
+            length = len(word)
+            right = list("_" * length)
+        else:
+            finished = True
