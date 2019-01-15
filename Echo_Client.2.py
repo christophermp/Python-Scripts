@@ -14,6 +14,7 @@ data = s.recv(1024)
 
 time.sleep(1)
 print('Received', repr(data))
+new_name = ''
 
 def move(): #Funksjon
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -33,5 +34,3 @@ if __name__ == "__main__":
     print("Ønsker du og skru {0}. Eller skru {1}.".format(lightsOff, lightsOn))
     command = input(host +" > ")
     func_dict[command]()
-
-input("Press enter to close program")
