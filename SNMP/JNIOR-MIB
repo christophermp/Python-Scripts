@@ -1,0 +1,173 @@
+-- The JNIOR has implemented SNMP v1.
+
+-- To enable SNMP on the JNIOR go to the JNIOR web page Configuration/Misc tab
+-- or define the Device/SNMP registry key with 
+-- the value of "enabled".  Furthermore you can define whether certain 
+-- I/O points send traps for states and alarms by defining the 
+-- IO/Inputs/din#/SnmpTrap or IO/Outputs/rout#/SnmpTrap registry keys with 
+-- the "enabled" value.  SNMP Traps should not be defined for IO points 
+-- that change state rapidly.
+
+-- The community string can be set by defining the Snmp/CommunityString.  
+-- By default the community string is "public".
+
+-- It should be known that the JNIOR is not a high speed device therefore 
+-- SNMP can be relatively slow.  SNMP traps can have a direct impact on I/O logging 
+-- performance.  Therefore the JNIOR should not be configured for a large 
+-- number of traps
+
+
+JNIOR-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+        enterprises
+                FROM RFC1155-SMI
+        OBJECT-TYPE
+                FROM RFC-1212
+        DisplayString, mib-2
+                FROM RFC1213-MIB
+        TRAP-TYPE
+		FROM RFC-1215;
+
+system       	OBJECT IDENTIFIER ::= { mib-2 1 }
+
+
+
+
+-- The JNIOR implementation falls under the INTEG Private Enterprise 
+-- Number.  It is broken into 2 subsections; I/O, Configuration.
+
+integ			OBJECT IDENTIFIER ::= {enterprises 31976}
+jnior		OBJECT IDENTIFIER ::= {integ 1}
+
+
+-- The following are events that trigger an info trap
+--     When the JNIOR has booted successfully
+--     When the JNIOR is rebooting
+--     When an application is started during boot
+--     When a log file is compressed
+--     When a log file is backed up
+infoTrap TRAP-TYPE
+	ENTERPRISE jnior
+	     DESCRIPTION "This is sent when the JNIOR has general event information"
+	::= 1
+
+
+
+
+
+io		OBJECT IDENTIFIER ::= {jnior 1}
+
+inputStateMask OBJECT-TYPE
+  SYNTAX  INTEGER
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "States of all inputs represented as a single byte.  MSB 
+          representing input 8"
+  ::= {io 1}
+
+
+-- inputs		OBJECT IDENTIFIER ::= {io 2}
+
+inputStates OBJECT-TYPE
+  SYNTAX  SEQUENCE OF InputEntry
+  ACCESS  not-accessible
+  STATUS  mandatory
+  DESCRIPTION
+          ""
+  ::= {io 2}
+
+inputEntry OBJECT-TYPE
+              SYNTAX  InputEntry
+              ACCESS  not-accessible
+              STATUS  mandatory
+              DESCRIPTION
+                  "An input entry containing state information."
+              INDEX   { inputChannel }
+              ::= { inputStates 1 }
+              
+InputEntry ::= SEQUENCE {
+    inputChannel				INTEGER,
+    inputState					INTEGER
+}
+
+inputChannel OBJECT-TYPE
+    SYNTAX  INTEGER (0..7)
+    ACCESS  read-only
+    STATUS  mandatory
+    DESCRIPTION
+            "The channel of the input"
+    ::= { inputEntry 1 }
+
+inputState OBJECT-TYPE
+    SYNTAX  INTEGER
+    ACCESS  read-only
+    STATUS  mandatory
+    DESCRIPTION
+            "The state of the input"
+    ::= { inputEntry 2 }
+
+
+
+outputStateMask OBJECT-TYPE
+  SYNTAX  INTEGER
+  ACCESS  read-only
+  STATUS  mandatory
+  DESCRIPTION
+          "States of all outputs represented in two bytes.  MSB 
+          representing output 16"
+  ::= {io 3}
+
+outputStates OBJECT-TYPE
+  SYNTAX  SEQUENCE OF OutputEntry
+  ACCESS  not-accessible
+  STATUS  mandatory
+  DESCRIPTION
+          ""
+  ::= {io 4}
+
+outputEntry OBJECT-TYPE
+              SYNTAX  OutputEntry
+              ACCESS  not-accessible
+              STATUS  mandatory
+              DESCRIPTION
+                  "An output entry containing state information."
+              INDEX   { outputChannel }
+              ::= { outputStates 1 }
+              
+OutputEntry ::= SEQUENCE {
+    outputChannel					INTEGER,
+    outputState					INTEGER
+}
+
+outputChannel OBJECT-TYPE
+    SYNTAX  INTEGER (0..15)
+    ACCESS  read-only
+    STATUS  mandatory
+    DESCRIPTION
+            "The channel of the output"
+    ::= { outputEntry 1 }
+
+outputState OBJECT-TYPE
+    SYNTAX  INTEGER
+    ACCESS  read-only
+    STATUS  mandatory
+    DESCRIPTION
+            "The state of the output"
+    ::= { outputEntry 2 }
+
+
+information		OBJECT IDENTIFIER ::= {jnior 2}
+
+serialNumber OBJECT-TYPE
+    SYNTAX  Integer32
+    ACCESS  read-only
+    STATUS  mandatory
+    DESCRIPTION
+            "This is the unique serial number of the JNIOR.  The serial number is 
+            assigned during the manufacturing process."
+    ::= { information 1 }
+    
+    
+END
