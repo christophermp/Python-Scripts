@@ -1,26 +1,13 @@
-from pysnmp.hlapi import *
+from easysnmp import snmp_get, snmp_set, snmp_walk
 
-for (errorIndication,
-     errorStatus,
-     errorIndex,
-     varBinds) in nextCmd(SnmpEngine(),
-                          CommunityData('public', mpModel=0),
-                          UdpTransportTarget(('192.168.0.100', 161)),
-                          ContextData(),
-                          ObjectType(ObjectIdentity('SNMPv2-MIB', 'sysContact')),
-                          ObjectType(ObjectIdentity('SNMPv2-MIB', 'sysObjectID')),
-                          ObjectType(ObjectIdentity('SNMPv2-MIB', 'sysUpTime')),
-                          ObjectType(ObjectIdentity('SNMPv2-MIB', 'sysContact')),
-                          ObjectType(ObjectIdentity('SNMPv2-MIB', 'sysName')),
-                          lexicographicMode=False):
+# Grab a single piece of information using an SNMP GET
+snmp_get('sysDescr.0', hostname='192.168.0.100', community='public', version=1)
 
-    if errorIndication:
-        print(errorIndication)
-        break
-    elif errorStatus:
-        print('%s at %s' % (errorStatus.prettyPrint(),
-                            errorIndex and varBinds[int(errorIndex)-1][0] or '?'))
-        break
-    else:
-        for varBind in varBinds:
-            print(' = '.join([x.prettyPrint() for x in varBind]))
+# Perform an SNMP SET to update data
+snmp_set(
+    'sysLocation.0', 'My Cool Place',
+    hostname='localhost', community='public', version=1
+)
+
+# Perform an SNMP walk
+snmp_walk('system', hostname='localhost', community='public', version=1)
