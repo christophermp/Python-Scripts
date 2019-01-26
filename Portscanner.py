@@ -12,9 +12,9 @@ remoteServer    = input("Enter a remote host to scan: ")
 remoteServerIP  = socket.gethostbyname(remoteServer)
 
 # Print a nice banner with information on which host we are about to scan
-print( "-" * 60)
+print( "-" * 20)
 print("Please wait, scanning remote host", remoteServerIP)
-print("-" * 60)
+print("-" * 20)
 
 # Check what time the scan started
 t1 = datetime.now()
@@ -24,7 +24,7 @@ t1 = datetime.now()
 # We also put in some error handling for catching errors
 
 try:
-    for port in range(1,1025):  
+    for port in range(1,90):  #Range Port 1 to 90
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         result = sock.connect_ex((remoteServerIP, port))
         if result == 0:
