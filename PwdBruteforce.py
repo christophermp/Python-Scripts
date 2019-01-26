@@ -20,6 +20,8 @@ def tryPassword(passwordSet, stringTypeSet):
 
 password = input("Password >")
 # Allowed characters
-stringType = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`~!@#$%^&*()_-+=[{]}|:;'\",<.>/?"
+stringType = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 tries, timeAmount = tryPassword(password, stringType)
-print("CyanCoding's BFPC cracked the password %s in %s tries and %s seconds!" % (password, tries, timeAmount))
+print("BFPC cracked the password %s in %s tries and %s seconds!" % (password, tries, timeAmount))
+
+#removed from string type  `~!@#$%^&*()_-+=[{]}|:;'\",<.>/?
