@@ -3,7 +3,7 @@ from pysnmp.hlapi import *
 errorIndication, errorStatus, errorIndex, varBinds = next(
     getCmd(SnmpEngine(),
            CommunityData('public', mpModel=0),
-           UdpTransportTarget(('192.168.0.100', 161)),
+           UdpTransportTarget(('10.0.0.161', 161)),
            ContextData(),
            ObjectType(ObjectIdentity('SNMPv2-MIB', 'sysUpTime', 0)),
            ObjectType(ObjectIdentity('SNMPv2-MIB', 'sysDescr', 0)))
